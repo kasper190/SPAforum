@@ -1,0 +1,68 @@
+http://127.0.0.1:8000/login/
+http://127.0.0.1:8000/logout/
+http://127.0.0.1:8000/admin/
+http://127.0.0.1:8000/api/user/login/
+http://127.0.0.1:8000/api/user/password-change/
+http://127.0.0.1:8000/api/user/password-reset/
+http://127.0.0.1:8000/api/user/username/
+http://127.0.0.1:8000/api/forum/
+http://127.0.0.1:8000/api/forum/subforum_slug/
+http://127.0.0.1:8000/api/forum/thread/create/
+http://127.0.0.1:8000/api/forum/subforum_slug/thread_slug/
+http://127.0.0.1:8000/api/forum/subforum_slug/thread_slug/edit/
+http://127.0.0.1:8000/api/forum/subforum_slug/thread_slug/delete/
+http://127.0.0.1:8000/api/post/create/
+http://127.0.0.1:8000/api/post/id/edit/
+http://127.0.0.1:8000/api/post/id/delete/
+http://127.0.0.1:8000/api/post/note/create/
+http://127.0.0.1:8000/api/post/note/id/edit/
+http://127.0.0.1:8000/api/post/note/id/delete/
+
+
+login
+curl -X POST -d "username=user1&password=user1" http://127.0.0.1:8000/api/user/login/
+http POST http://127.0.0.1:8000/api/user/login/ username=username password=password
+
+password-change
+curl -H "Authorization: JWT <<token>>" -X PUT -d "password=password&password1=new_password&password2=new_password" http://127.0.0.1:8000/api/user/password-change/
+http PUT http://127.0.0.1:8000/api/user/password-change/ 'Authorization: JWT <token>' password=password password1=new_password password2=new_password
+
+password-reset
+curl -X POST -d "email=example@example.com" http://127.0.0.1:8000/api/user/password-reset/
+http POST http://127.0.0.1:8000/api/user/password-reset/ email=example@example.com
+
+thread-create
+curl -H "Authorization: JWT <token>" -X POST -d "subforum=subforum_id&user=user_id&title=Some title&publish=YYYY-MM-DD&post=Some post content" http://127.0.0.1:8000/api/forum/thread/create/
+http POST http://127.0.0.1:8000/api/forum/thread/create/ 'Authorization: JWT <token>' subforum=subforum_id user=user_id title='Some title' post='Some post content' 
+
+thread-update
+curl -H "Authorization: JWT <token>" -X PUT -d "subforum=subforum_id&user=user_id&title=Some title&publish=YYYY-MM-DD&is_open=boolean_value" http://127.0.0.1:8000/api/forum/<subforum_slug>/<thread_slug>/edit/
+http PUT http://127.0.0.1:8000/api/forum/<subforum_slug>/<thread_slug>/edit/ 'Authorization: JWT <token>' subforum=subforum_id user=user_id title='Some title' is_open=boolean_value
+
+thread-delete
+curl -H "Authorization: JWT <token>" -X DELETE http://127.0.0.1:8000/api/forum/<subforum_slug>/<thread_slug>/delete/
+http DELETE http://127.0.0.1:8000/api/forum/<subforum_slug>/<thread_slug>/delete/ 'Authorization: JWT <token>'
+
+post-create
+curl -H "Authorization: JWT <token>" -X POST -d "&user=user_id&thread=thread_id&content=Some post content" http://127.0.0.1:8000/api/post/create/
+http POST http://127.0.0.1:8000/api/post/create/ 'Authorization: JWT <token>' user=user_id thread=thread_id content='Some post content'
+
+post-update
+curl -H "Authorization: JWT <token>" -X PUT -d "content=Some post content" http://127.0.0.1:8000/api/post/<post_id>/edit/
+http PUT http://127.0.0.1:8000/api/post/<post_id>/edit/ 'Authorization: JWT <token>' content='Some post content'
+
+post-delete
+curl -H "Authorization: JWT <token>" -X DELETE http://127.0.0.1:8000/api/post/<post_id>/delete/
+http DELETE http://127.0.0.1:8000/api/post/<post_id>/delete/ 'Authorization: JWT <token>'
+
+note-create
+curl -H "Authorization: JWT <token>" -X POST -d "&user=user_id&post=post_id&note=Some note" http://127.0.0.1:8000/api/post/note/create/
+http POST http://127.0.0.1:8000/api/post/note/create/ 'Authorization: JWT <token>' user=user_id post=post_id note='Some note'
+
+note-update
+curl -H "Authorization: JWT <token>" -X PUT -d "&user=user_id&post=post_id&note=Some note" http://127.0.0.1:8000/api/post/note/<note_id>/edit/
+http PUT http://127.0.0.1:8000/api/post/note/<note_id>/edit/ 'Authorization: JWT <token>' user=user_id post=post_id note='Some note'
+
+note-delete
+curl -H "Authorization: JWT <token>" -X DELETE http://127.0.0.1:8000/api/post/note/<note_id>/delete/
+http DELETE http://127.0.0.1:8000/api/post/note/<note_id>/delete/ 'Authorization: JWT <token>'

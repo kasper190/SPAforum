@@ -1,0 +1,33 @@
+<div class="row" ng-if='user'>
+  <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+    <h2 class="text-center">User Profile</h2>
+    <div class="user-profile">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="text-center">
+            <p class="username">{{user.username}}</p>
+            <p><i class="glyphicon glyphicon-user user-icon"></i></p>
+            <div class="center">
+              <p class="text-left">
+                <b>Joined: </b><span class="date_joined">{{ user.date_joined | date: 'yyyy-MM-dd' }}</span>
+                <br/><b>Last login: </b><span class="date_joined">{{ user.last_login | date: "yyyy-MM-dd, h:mm a" }}</span>
+                <br/><b>Status: </b>
+                <span class="is_banned">
+                  <span ng-show='user.is_banned'>Inactive</span>
+                  <span ng-show='!user.is_banned'>Active</span>  
+                </span>
+              </p>
+              <p class="password-change" ng-show='is_Owner(currentUser, user.username)'>
+                <a ng-href="/user/password-change">Password Change</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="well text-center" ng-if='!user'>
+  <h4><i class="glyphicon glyphicon-info-sign"></i> No User found.</h4>
+</div>

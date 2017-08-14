@@ -1,0 +1,244 @@
+ <div id="thread-detail">
+
+  <!-- <thread-detail> -->
+
+  <form id="thread-update"></form>
+  <table class="thread-header">
+    <tr>
+
+      <td ng-hide='threadEdit'>
+        <span class="thread-title">{{ thread.title }}</span>        
+      </td>
+
+      <td class="form-group" ng-show='threadEdit' ng-class="{'has-error': threadEditError.title }">
+        <input type="text" class="form-control thread-title-edit" id="thread" ng-model='newContent.threadEdit' form="thread-update"> 
+        <label class="control-label" for="post" ng-if='threadEditError.title'>
+          <span ng-repeat='error in threadEditError.title'>{{ error }}<br/></span>
+        </label>      
+      </td>
+
+      <td class="cell-stat text-right" ng-hide='threadEdit'>
+        <span ng-show='isModerator(thread.moderators)'>
+          <a ng-href="#" class="thread-edit" ng-click='threadEditOpen(); newContent.threadEdit = thread.title;'>Edit</a>
+          <a ng-href="#" class="thread-delete" ng-click='threadDelete(thread)'>Delete</a>
+        </span>
+      </td>
+      
+      <td class="cell-stat" ng-show='threadEdit'>
+        <select ng-model='thread.is_open' id="is_open" class="form-control" form="thread-update" >
+          <option value="true" ng-selected="thread.is_open == true">Thread Open</option>
+          <option value="false" ng-selected="thread.is_open == false">Thread Close</option>
+        </select>
+      </td>
+      
+    </tr>
+    <tr>
+
+      <td class="thread-location">
+        <a ng-href='/forum/{{ subforum_slug }}'>
+          {{ thread.category }} <i class="glyphicon glyphicon-chevron-right"></i> {{ thread.subforum }}
+        </a>
+      </td>
+
+      <td class="cell-stat text-right" ng-hide='threadEdit'>
+        <span class="thread-open label label-default" ng-show='thread.is_open'>Thread Open</span>
+        <span class="thread-closed label label-danger" ng-show='!thread.is_open'$scope.subforum_slug = subforum_slug>Thread Closed</span>
+      </td>
+
+      <td ng-show='threadEdit'>
+        <input type="submit" class="btn btn-success" value="Edit Thread" form="thread-update" ng-click='threadUpdate(thread)'/>
+        <input type="submit" class="btn btn-warning" value="Cancel" ng-click='cancelEdit(); newContent.threadEdit = thread.title' />
+      </td>
+
+    </tr>
+  </table>
+  
+  <!-- </thread-detail> -->
+  <!-- <post-detail> -->
+  
+  <div class="row" ng-show='thread.posts.length > 0'>
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+      <input class='form-control' type='text' ng-model='query' placeholder='Filter Posts' />
+    </div>
+  </div>
+
+  <table class="table post table-bordered" ng-show='thread.posts.length > 0'>
+    <thead>
+      <tr>
+        <th class="cell-stat text-center bg-primary">Author</th>
+        <th class="text-center bg-primary">Post</th>
+      </tr>
+    </thead>
+    <tbody dir-paginate='post in thread.posts | orderBy: "publish" | filter: query | itemsPerPage: postsPerPage' current-page="currentPage">
+      <tr>
+        <td class="post-header active"></td>
+        <td class="post-header active small">
+          <div class="row">
+            <div class="col-xs-4 col-sm-5 col-md-4 col-lg-3">
+              <strong>Published: &nbsp;</strong>{{ post.publish | date: 'yyyy-MM-dd, h:mm a' }}
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-5 col-lg-7">
+              <span ng-show='isEdited(post.publish, post.updated)'>
+                <strong>Edited: &nbsp;</strong>{{ post.updated | date: 'yyyy-MM-dd, h:mm a' }}
+              </span>
+            </div>
+            <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2 text-right">
+              <a ng-href="#" ng-show='isModerator(thread.moderators)' ng-click='postNoteOpen(post.id);'><b>Note</b></a>
+              &nbsp;
+              <a ng-href="#" ng-show='isAuthor(currentUser, post.user.username) || isModerator(thread.moderators)' ng-click='postEditOpen(post.id); newContent.postEdit = post.content;'><b>Edit</b></a>
+              &nbsp;
+              <a ng-href="#" ng-show='isModerator(thread.moderators)' ng-click='postDelete(post)'><b>Delete</b></a>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center">
+          <p><a ng-href="/user/{{ post.user.username }}">{{ post.user.username }}</a></p>
+          <p><i class="glyphicon glyphicon-user user-icon"></i></p>
+          <p>
+            <p class="text-left small">
+              <b>Joined: <span class="date_joined">{{ post.user.date_joined | date: 'yyyy-MM-dd' }}</span></b>
+              <br/><b>Posts: <span class="posts_count">{{ post.user.posts_count }}</span></b>
+            </p>
+        </td>
+        <td>
+          <div ng-hide='postEdit == post.id' class="post-content">
+            <pre>{{ post.content }}</pre>
+          </div>
+
+          <!-- <post-update> -->
+
+          <div ng-show='postEdit == post.id'>
+             <form>
+              <div class="form-group" ng-class="{'has-error': postEditError.content }">
+                <textarea class="form-control" id="post" ng-model='newContent.postEdit' msd-elastic></textarea>
+                <label class="control-label" for="post" ng-if='postEditError.content'>
+                  <span ng-repeat='error in postEditError.content'>{{ error }}<br/></span>
+                </label>
+              </div>
+              <div class="form-group text-right">
+                <input type="submit" class="btn btn-success" value="Edit Post" ng-click='postUpdate(post)' />
+                <input type="submit" class="btn btn-warning" value="Cancel" ng-click='cancelEdit(); newContent.postEdit = post.content' />
+              </div>
+            </form>
+          </div>
+
+          <!-- <post-update> -->
+          <!-- <note-create> -->
+
+          <div class="row" ng-show='postNote == post.id'>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+              <form>
+                <div class="form-group" ng-class="{'has-error': noteError.note }">
+                  <label for="post">New Note</label>
+                  <textarea class="form-control" id="note" ng-model='newContent.note' msd-elastic></textarea>
+                  <label class="control-label" for="note" ng-if='noteError.note'>
+                    <span ng-repeat='error in noteError.note'>{{ error }}<br/></span>
+                  </label>
+                </div>
+                <div class="form-group text-right">
+                  <input type="submit" class="btn btn-success" value='Add Note' ng-click='noteCreate(post)'/>
+                  <input type="submit" class="btn btn-warning" value='Cancel' ng-click='cancelEdit()'/>
+                </div>
+              </form>
+            </div>
+          </div>
+          
+          <!-- </note-create> -->
+          <!-- <note-detail> -->
+
+          <div class="row" ng-show='post.notes' ng-repeat='note in post.notes'>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1 note">
+             <div class="panel panel-danger small">
+                <div class="panel-heading">
+                  <div class="row">
+                    <div class="col-xs-12 col-md-3">
+                      <i class="glyphicon glyphicon-exclamation-sign"></i>
+                      Author:&nbsp;&nbsp;<a ng-href="/user/{{ note.user.username }}" class="text-danger"><strong>{{ note.user.username }}</strong></a>
+                    </div>
+                    <div class="col-xs-6 col-md-4">
+                      Published:&nbsp;&nbsp;<span class="note-publish">{{ note.publish | date: 'yyyy-MM-dd, h:mm a' }}</span>
+                    </div>
+                    <div class="col-xs-6 col-md-3" ng-show='isEdited(note.publish, note.updated)'>
+                      Edited: <span class="note-updated">{{ note.updated | date: 'yyyy-MM-dd, h:mm a' }}</span>
+                    </div>
+                    <div class="col-xs-12 col-md-2 pull-right text-right">
+                      <strong><a ng-href="#" class="text-danger" ng-show='isAuthor(currentUser, note.user.username) && isModerator(thread.moderators)' ng-click='noteEditOpen(note.id); newContent.noteEdit = note.note;'>Edit</a></strong>
+                      &nbsp;
+                      <strong><a ng-href="#" class="text-danger" ng-show='isAuthor(currentUser, note.user.username) && isModerator(thread.moderators)' ng-click='noteDelete(note, post)'>Delete</a></strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="panel-body bg-danger">
+                  <div ng-hide='noteEdit == note.id' class="note-content">
+                    <pre>{{ note.note }}</pre>
+                  </div>
+
+                  <!-- <note-update> -->
+                  <div ng-show='noteEdit == note.id'>
+                     <form>
+                      <div class="form-group" ng-class="{'has-error': noteEditError.note }">
+                        <textarea class="form-control" id="note" ng-model='newContent.noteEdit' msd-elastic></textarea>
+                        <label class="control-label" for="note" ng-if='noteEditError.note'>
+                          <span ng-repeat='error in noteEditError.note'>{{ error }}<br/></span>
+                        </label>
+                      </div>
+                      <div class="form-group text-right">
+                        <input type="submit" class="btn btn-success" value="Edit Note" ng-click='noteUpdate(post, note)' />
+                        <input type="submit" class="btn btn-warning" value="Cancel" ng-click='cancelEdit(); newContent.noteEdit = note.note' />
+                      </div>
+                    </form>
+                  </div>
+                  <!-- </note-update> -->
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <!-- </note-detail> -->
+
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <!-- </post-detail> -->
+  <!-- <pagination> -->
+
+  <div class='text-right' ng-show='thread.posts.length > 0'>
+    <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+  </div>
+
+  <!-- </pagination> -->
+  <!-- <no-posts-found> -->
+
+  <div class="well text-center" ng-if='thread.posts.length == 0'>
+    <h4><i class="glyphicon glyphicon-info-sign"></i> No Posts found</h4>
+  </div>
+
+  <!-- </no-posts-found> -->
+  <!-- <post-create> -->
+
+  <div class="row" ng-show='thread.is_open && currentUser && !query'>
+    <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+      <form class="post-create-form">
+        <div class="form-group" ng-class="{'has-error': postError.content }">
+          <label for="post">New Post</label>
+          <textarea class="form-control" id="post" ng-model='newContent.post' msd-elastic></textarea>
+          <label class="control-label" for="post" ng-if='postError.content'>
+            <span ng-repeat='error in postError.content'>{{ error }}<br/></span>
+          </label>
+        </div>
+        <input type="submit" class="btn btn-success" value='Add Post' ng-click='postCreate()'/>
+        <input type="submit" class="btn btn-warning" value='Cancel' ng-click='newContent.post = null'/>
+      </form>
+    </div>
+  </div>
+
+  <!-- </post-create> -->
+
+</div>

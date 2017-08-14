@@ -1,0 +1,76 @@
+<div class="row">
+  <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10">
+    <h2 class="subforum">{{ subforum.subforum }}<span class="subforum-description">{{ subforum.description }}</span></h2>
+  </div>
+  <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 text-right" ng-show='currentUser'>
+    <h2><button type="button" class="btn btn-primary" ng-click='show = !show'>New Thread</button></h2>
+  </div>
+</div>
+
+<div class="row" ng-show='show'>
+  <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+    <form class="thread-create-form">
+      <div class="form-group" ng-class="{'has-error': threadError.thread }">
+        <label for="thread">Thread</label>
+        <input type="text" class="form-control" id="thread" ng-model='newThread.title'>
+        <label class="control-label" for="post" ng-if='threadError.thread'>
+          <span ng-repeat='error in threadError.thread'>{{ error }}<br/></span>
+        </label>
+      </div>
+      <div class="form-group" ng-class="{'has-error': threadError.post }">
+        <label for="post">Post</label>
+        <textarea class="form-control" id="post" ng-model='newThread.post' msd-elastic></textarea>
+        <label class="control-label" for="post" ng-if='threadError.post'>
+          <span ng-repeat='error in threadError.post'>{{ error }}<br/></span>
+        </label>
+      </div>
+      <input type="submit" class="btn btn-success" value='Add Thread' ng-click='threadCreate()'/>
+      <input type="submit" class="btn btn-warning" value="Cancel" ng-click='cancelThread(); show = !show' />
+    </form>
+  </div>
+</div>
+
+<div class="row" ng-show='subforum.threads.length > 0'>
+  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <input class='form-control' type='text' ng-model='query' placeholder='Filter Threads' />
+  </div>
+</div>
+
+<table class="table thread table-striped" ng-show='subforum.threads.length > 0'>
+  <thead>
+    <tr>
+      <th class="cell-stat"></th>
+      <th>Title</th>
+      <th class="cell-stat text-center">Author</th>
+      <th class="cell-stat text-center">Replies</th>
+      <th class="cell-stat text-center">Publish</th>
+      <th class="cell-stat-2x">Last Post</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr dir-paginate='thread in subforum.threads | orderBy: "-publish" | filter: query | itemsPerPage: threadsPerPage' current-page="currentPage">
+      <td class="text-center">
+        <i class="glyphicon glyphicon-folder-open folder-icon text-primary" ng-show='thread.is_open'></i>
+        <i class="glyphicon glyphicon-folder-open folder-icon text-muted" ng-show='!thread.is_open'></i>
+      </td>
+      <td><a ng-href='/forum/{{ subforum.subforum_slug }}/{{ thread.thread_slug }}?page=1'>{{ thread.title }}</a></td>
+      <td class="text-center"><a ng-href="/user/{{ thread.user }}">{{ thread.user }}</a></td>
+      <td class="text-center"><a ng-href="/forum/{{ subforum.subforum_slug }}/{{ thread.thread_slug }}?page=1">{{ thread.replies_count }}</a></td>
+      <td class="text-center"><a ng-href="/forum/{{ subforum.subforum_slug }}/{{ thread.thread_slug }}?page=1">{{ thread.publish | date: 'yyyy-MM-dd' }}</a></td>
+      <td>
+        <span ng-if="thread.replies_count">
+          by <a ng-href='/user/{{ thread.last_post_author }}'>{{ thread.last_post_author }}</a><br>
+          <small><i class="glyphicon glyphicon-time"></i> {{ thread.last_post_publish | date: 'yyyy-MM-dd, h:mm a' }}</small>
+        </span>
+      </td>
+    </tr>   
+  </tbody>
+</table>
+
+<div class='text-right'>
+  <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" ng-show='subforum.threads.length > 0'></dir-pagination-controls>
+</div>
+
+<div class="well text-center" ng-if='subforum.threads.length == 0'>
+  <h4><i class="glyphicon glyphicon-info-sign"></i> No Threads found</h4>
+</div>

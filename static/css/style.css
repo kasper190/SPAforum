@@ -1,0 +1,198 @@
+body {
+    overflow-y: scroll;
+}
+textarea { 
+    min-height: 9em;
+}
+select option: empty { 
+    display: none;
+}
+pre {
+    border: 0px; 
+    background-color: transparent;
+    white-space: pre-wrap;
+    word-break: normal;
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
+/* forum-detail */
+
+.subforum.table {
+    margin-bottom: -1.5em;
+}
+.subforum.table > tbody > tr > td {
+    vertical-align: middle;
+}
+.subforum .folder-icon {
+    width: 4em;
+    text-align: center;
+}
+.subforum.table th.cell-stat {
+    width: 6em;
+}
+.subforum.table th.cell-stat-2x {
+    width: 14em;
+}
+.category-description {
+    font-weight: 400;
+}
+
+/* subforum-detail */
+
+.thread.table {
+    margin: 0em;
+}
+.thread.table > tbody > tr > td {
+    vertical-align: middle;
+}
+.thread .folder-icon {
+    width: 4em;
+    text-align: center;
+    font-size: 18px;
+}
+.thread.table th.cell-stat {
+    width: 6em;
+}
+.thread.table th.cell-stat-2x {
+    width: 14em;
+}
+.subforum .subforum-description {
+    margin-left: 0.5em;
+    font-size: 14px;
+}
+
+/* thread-detail */
+
+#thread-detail {
+    margin-bottom: 2em;
+}
+.thread-header {
+    width: 100%;
+    margin-bottom: 1em;
+}
+.thread-header td.cell-stat {
+    width: 12.3em;
+}
+.thread-header .thread-title {
+    font-size: 24px;
+}
+.thread-header .thread-title-edit {
+    font-size: 24px;
+    padding: 0px;
+}
+.thread-header .thread-location {
+    font-size: 16px;
+}
+.thread-header .thread-edit {
+    font-weight: bold;
+}
+.thread-header .thread-delete {
+    margin-left: 0.5em;
+    font-weight: bold;
+}
+.post.table {
+    margin: 1em 0em 0em 0em;
+}
+.post.table > tbody > tr > td {
+    height: 8em;
+}
+.post.table th.cell-stat {
+    width: 11em;
+}
+.post.table td.post-header {
+    height: 1.2em;
+    padding: 0.2em;
+}
+.post .user-icon {
+    text-align: center;
+    font-size: 2em;
+}
+.note .panel-body .note-content {
+    margin: -1em -1em -1.6em -1em;
+}
+.note .panel-heading {
+    padding: 0.2em;
+}
+
+/* thread-create-update */
+
+.thread-create-form {
+    padding: 1em 0em 2em 0em;
+}
+
+/* post-create-update */
+
+.post-create-form {
+    padding: 2em 0em 0em 0em;
+}
+
+/* note-create-update */
+
+.note-create-form .thread{
+    margin-left: 0.5em;
+}
+.note-create-form .post{
+    margin-left: 0.5em;
+}
+
+/* user-detail */
+
+.user-profile .username{
+    font-weight: bold;
+}
+.user-profile .user-icon {
+    margin: 0.1em;
+    text-align: center;
+    font-size: 4em;
+}
+
+/* password-reset */
+
+.reset-loading{
+    margin-top: 0.35em;
+    color: #337ab7;
+    font-weight: bold;
+}
+
+/* message */
+
+.message {
+    z-index: 10000;
+    position: fixed;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 1em;
+    width: 30em;
+    padding: 1em;
+    border-radius: 1.3em;
+    border: 2px solid #3c763d;
+    background-color: #dff0d8;
+    color: #3c763d;
+    text-align: center;
+    font-weight: bold;
+    transition: all linear 0.5s;
+}
+.message.ng-hide {
+    opacity: 0;
+}
+
+/* Other styles */
+
+.center {
+    margin: auto;
+    width: 50%;
+}
+.spinner {
+    height: 2.15em;
+    width: 2.15em;
+    animation: rotate 1.5s infinite linear;
+    border: 4px solid #337ab7;
+    border-right-color: transparent;
+    border-radius: 50%;
+}
+@keyframes rotate {
+    0%    { transform: rotate(0deg); }
+    100%  { transform: rotate(360deg); }
+}
